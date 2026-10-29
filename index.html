@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SmartHR Pro — People Operations</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" aria-label="SmartHR Pro home"><span class="brand-mark">S</span><span>SmartHR <small>PRO</small></span></a>
+    <div class="workspace"><span class="workspace-dot"></span><span><b>People Operations</b><small>Local workspace</small></span><span class="chevron">⌄</span></div>
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="nav-list">
+      <button class="nav-item active" data-page="dashboard"><span>▦</span> Overview</button>
+      <button class="nav-item" data-page="employees"><span>♙</span> Employees <i id="navEmployees">0</i></button>
+      <button class="nav-item" data-page="attendance"><span>◷</span> Attendance</button>
+      <button class="nav-item" data-page="leaves"><span>▣</span> Leave management <i id="navLeaves">0</i></button>
+      <button class="nav-item" data-page="payroll"><span>＄</span> Payroll</button>
+      <button class="nav-item" data-page="recruitment"><span>◎</span> Recruitment</button>
+      <button class="nav-item" data-page="onboarding"><span>✦</span> Onboarding</button>
+      <button class="nav-item" data-page="letters"><span>▤</span> HR letters</button>
+      <button class="nav-item" data-page="reports"><span>↗</span> Reports & backup</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="local-badge"><span>●</span><div><b>Local mode enabled</b><small>Saved in this browser</small></div></div>
+      <button class="nav-item" data-page="settings"><span>⚙</span> Settings & help</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="icon-btn mobile-menu" id="menuToggle" aria-label="Open navigation">☰</button>
+      <div class="breadcrumb">Workspace <span>/</span> <b id="breadcrumbTitle">Overview</b></div>
+      <div class="top-actions">
+        <span class="date-chip" id="todayLabel"></span>
+        <button class="icon-btn" id="backupQuick" title="Download backup">↓</button>
+        <div class="user-avatar" title="Local HR workspace">HR</div>
+      </div>
+    </header>
+
+    <section class="page active" id="page-dashboard">
+      <div class="page-heading">
+        <div><div class="eyebrow">PEOPLE OPERATIONS</div><h1>Good day, HR team <span class="wave">✦</span></h1><p>Here's what's happening across your workplace today.</p></div>
+        <div class="heading-actions"><button class="btn btn-secondary" data-go="reports">Export data ↗</button><button class="btn btn-primary" data-go="employees">＋ Add employee</button></div>
+      </div>
+      <div class="stat-grid">
+        <article class="stat-card"><div class="stat-top"><span>Total employees</span><span class="stat-icon violet">♙</span></div><div class="stat-value" id="statEmployees">0</div><div class="stat-foot"><span class="dot green-dot"></span><span id="statActive">0 active employees</span></div></article>
+        <article class="stat-card"><div class="stat-top"><span>Present today</span><span class="stat-icon mint">✓</span></div><div class="stat-value" id="statPresent">0</div><div class="stat-foot"><span id="statAttendanceHint">No attendance marked yet</span></div></article>
+        <article class="stat-card"><div class="stat-top"><span>Pending leave</span><span class="stat-icon amber">▣</span></div><div class="stat-value" id="statPending">0</div><div class="stat-foot"><span>Requests awaiting review</span></div></article>
+        <article class="stat-card"><div class="stat-top"><span>Payroll this month</span><span class="stat-icon blue">＄</span></div><div class="stat-value money-value" id="statPayroll">PKR 0</div><div class="stat-foot"><span>Saved net payroll records</span></div></article>
+      </div>
+      <div class="dashboard-grid">
+        <article class="panel attendance-panel"><div class="panel-heading"><div><h2>Attendance overview</h2><p>Today's recorded attendance</p></div><button class="text-btn" data-go="attendance">Manage →</button></div><div id="attendanceOverview"></div><div class="legend"><span><i class="legend-dot present"></i>Present</span><span><i class="legend-dot late"></i>Late</span><span><i class="legend-dot absent"></i>Absent</span><span><i class="legend-dot leave"></i>Leave</span></div></article>
+        <article class="panel"><div class="panel-heading"><div><h2>Quick actions</h2><p>Common HR tasks</p></div></div><div class="quick-grid"><button class="quick-action" data-go="employees"><span class="quick-icon violet">＋</span><b>Add employee</b><small>Create a staff profile</small></button><button class="quick-action" data-go="attendance"><span class="quick-icon mint">✓</span><b>Mark attendance</b><small>Record today's status</small></button><button class="quick-action" data-go="leaves"><span class="quick-icon amber">▣</span><b>Review leave</b><small>Approve or reject requests</small></button><button class="quick-action" data-go="payroll"><span class="quick-icon blue">＄</span><b>Run payroll</b><small>Calculate net salary</small></button></div></article>
+      </div>
+      <article class="panel"><div class="panel-heading"><div><h2>Recently added employees</h2><p>Your latest employee records</p></div><button class="text-btn" data-go="employees">View directory →</button></div><div id="recentEmployees"></div></article>
+      <article class="panel"><div class="panel-heading"><div><h2>Recent activity</h2><p>Latest changes in this browser</p></div></div><div id="activityList" class="activity-list"></div></article>
+    </section>
+
+    <section class="page" id="page-employees">
+      <div class="page-heading"><div><div class="eyebrow">PEOPLE DIRECTORY</div><h1>Employees</h1><p>Manage employee profiles, departments and employment status.</p></div><button class="btn btn-primary" id="newEmployeeBtn">＋ Add employee</button></div>
+      <article class="panel"><div class="toolbar"><div class="search-wrap"><span>⌕</span><input id="employeeSearch" placeholder="Search name, ID, department..."></div><select id="employeeDeptFilter" class="control"><option value="">All departments</option></select><select id="employeeStatusFilter" class="control"><option value="">All statuses</option><option>Active</option><option>Inactive</option></select><button class="btn btn-secondary" id="employeeExport">Export CSV</button></div><div id="employeeTable"></div></article>
+      <article class="panel" id="employeeFormPanel"><div class="panel-heading"><div><h2 id="employeeFormHeading">Add employee</h2><p>Fields marked * are required.</p></div><button class="icon-btn" id="closeEmployeeForm" aria-label="Clear form">×</button></div>
+        <form id="employeeForm"><input type="hidden" id="empRecordId"><div class="form-grid">
+          <label>Employee ID *<input id="empId" required placeholder="EMP-001"></label><label>Full name *<input id="empName" required placeholder="Full legal name"></label><label>Email<input id="empEmail" type="email" placeholder="name@company.com"></label>
+          <label>Phone<input id="empPhone" placeholder="+92 ..."></label><label>Department *<select id="empDept" required><option value="">Select department</option><option>Human Resources</option><option>IT</option><option>Finance</option><option>Sales</option><option>Marketing</option><option>Operations</option><option>Administration</option><option>Customer Support</option><option>Other</option></select></label><label>Designation *<input id="empRole" required placeholder="e.g. HR Executive"></label>
+          <label>Joining date *<input id="empJoin" type="date" required></label><label>Monthly basic salary (PKR) *<input id="empSalary" type="number" min="0" step="0.01" required placeholder="50000"></label><label>Employment status<select id="empStatus"><option>Active</option><option>Inactive</option></select></label>
+        </div><div class="form-actions"><button class="btn btn-primary" type="submit">Save employee</button><button class="btn btn-secondary" type="button" id="cancelEmployee">Cancel</button></div></form>
+      </article>
+    </section>
+
+    <section class="page" id="page-attendance">
+      <div class="page-heading"><div><div class="eyebrow">TIME & ATTENDANCE</div><h1>Attendance</h1><p>Record daily attendance and review attendance history.</p></div><button class="btn btn-secondary" id="attendanceExport">Export CSV ↓</button></div>
+      <article class="panel"><div class="panel-heading"><div><h2>Mark attendance</h2><p>One record per employee per day; saving again updates it.</p></div></div><form id="attendanceForm"><div class="form-grid">
+        <label>Employee *<select id="attEmployee" required></select></label><label>Date *<input id="attDate" type="date" required></label><label>Status *<select id="attStatus"><option>Present</option><option>Late</option><option>Absent</option><option>Leave</option></select></label><label>Check-in<input id="attIn" type="time"></label><label>Check-out<input id="attOut" type="time"></label><label>Notes<input id="attNotes" placeholder="Optional notes"></label>
+      </div><div class="form-actions"><button class="btn btn-primary">Save attendance</button></div></form></article>
+      <article class="panel"><div class="toolbar"><div><h2>Attendance register</h2><p class="helper">Filter records by date or status.</p></div><input class="control" type="date" id="attFilterDate"><select class="control" id="attFilterStatus"><option value="">All statuses</option><option>Present</option><option>Late</option><option>Absent</option><option>Leave</option></select></div><div id="attendanceTable"></div></article>
+    </section>
+
+    <section class="page" id="page-leaves">
+      <div class="page-heading"><div><div class="eyebrow">TIME OFF</div><h1>Leave management</h1><p>Track requests and record approval decisions.</p></div></div>
+      <article class="panel"><div class="panel-heading"><div><h2>New leave request</h2><p>Requests are marked Pending until reviewed.</p></div></div><form id="leaveForm"><div class="form-grid">
+        <label>Employee *<select id="leaveEmployee" required></select></label><label>Leave type<select id="leaveType"><option>Casual</option><option>Sick</option><option>Annual</option><option>Unpaid</option><option>Other</option></select></label><label>Start date *<input id="leaveStart" type="date" required></label><label>End date *<input id="leaveEnd" type="date" required></label><label class="span-2">Reason *<input id="leaveReason" required placeholder="Reason for leave"></label>
+      </div><div class="form-actions"><button class="btn btn-primary">Submit request</button></div></form></article>
+      <article class="panel"><div class="toolbar"><div><h2>Leave requests</h2><p class="helper">Approve or reject pending requests.</p></div><select id="leaveFilter" class="control"><option value="">All statuses</option><option>Pending</option><option>Approved</option><option>Rejected</option></select></div><div id="leaveTable"></div></article>
+    </section>
+
+    <section class="page" id="page-payroll">
+      <div class="page-heading"><div><div class="eyebrow">COMPENSATION</div><h1>Payroll</h1><p>Calculate salary, maintain monthly records and print payslips.</p></div><button class="btn btn-secondary" id="payrollExport">Export CSV ↓</button></div>
+      <div class="callout">Payroll is a record-keeping calculator, not tax advice. Confirm applicable Pakistan tax, EOBI, social security and company deductions before issuing payment.</div>
+      <article class="panel"><div class="panel-heading"><div><h2>Create payroll record</h2><p>Net salary = basic + allowances − deductions.</p></div></div><form id="payrollForm"><div class="form-grid">
+        <label>Employee *<select id="payEmployee" required></select></label><label>Salary month *<input id="payMonth" type="month" required></label><label>Basic salary (PKR) *<input id="payBasic" type="number" min="0" step="0.01" required></label><label>Allowances (PKR)<input id="payAllowance" type="number" min="0" step="0.01" value="0" required></label><label>Deductions (PKR)<input id="payDeduction" type="number" min="0" step="0.01" value="0" required></label><label>Net salary preview<div class="preview-field" id="netPreview">PKR 0</div></label>
+      </div><div class="form-actions"><button class="btn btn-primary">Calculate & save payroll</button></div></form></article>
+      <article class="panel"><div class="toolbar"><div><h2>Payroll register</h2><p class="helper">Keep one reviewed payroll record per employee per month.</p></div><input type="month" class="control" id="payFilterMonth"><button class="btn btn-secondary" id="payrollExport2">Export CSV</button></div><div id="payrollTable"></div></article>
+      <article class="panel" id="payslipPanel" hidden></article>
+    </section>
+
+    <section class="page" id="page-recruitment">
+      <div class="page-heading"><div><div class="eyebrow">TALENT ACQUISITION</div><h1>Recruitment</h1><p>Track candidates, interview dates and hiring decisions.</p></div></div>
+      <article class="panel"><div class="panel-heading"><div><h2>Add candidate</h2><p>Store basic candidate details for your hiring pipeline.</p></div></div><form id="candidateForm"><div class="form-grid"><label>Candidate name *<input id="candName" required></label><label>Email<input id="candEmail" type="email"></label><label>Phone<input id="candPhone"></label><label>Position *<input id="candPosition" required placeholder="e.g. Office Assistant"></label><label>Interview date<input id="candInterview" type="date"></label><label>Stage<select id="candStage"><option>Applied</option><option>Shortlisted</option><option>Interview</option><option>Offered</option><option>Hired</option><option>Rejected</option></select></label></div><div class="form-actions"><button class="btn btn-primary">Add candidate</button></div></form></article>
+      <article class="panel"><div class="toolbar"><div><h2>Candidate pipeline</h2><p class="helper">Update each candidate's hiring stage.</p></div><input class="control search-control" id="candidateSearch" placeholder="Search candidates..."></div><div id="candidateTable"></div></article>
+    </section>
+
+    <section class="page" id="page-onboarding">
+      <div class="page-heading"><div><div class="eyebrow">EMPLOYEE EXPERIENCE</div><h1>Onboarding</h1><p>Manage joining checklists for new employees.</p></div></div>
+      <article class="panel"><div class="panel-heading"><div><h2>Create onboarding checklist</h2><p>Choose an employee and track each joining task.</p></div></div><form id="onboardForm"><div class="form-grid"><label>Employee *<select id="onboardEmployee" required></select></label><label>Joining date<input id="onboardDate" type="date"></label><label>Assigned HR contact<input id="onboardOwner" placeholder="HR coordinator"></label></div><div class="form-actions"><button class="btn btn-primary">Create checklist</button></div></form></article>
+      <article class="panel"><div class="panel-heading"><div><h2>Onboarding checklists</h2><p>Tick tasks when completed.</p></div></div><div id="onboardList"></div></article>
+    </section>
+
+    <section class="page" id="page-letters">
+      <div class="page-heading"><div><div class="eyebrow">DOCUMENT CENTRE</div><h1>HR letters</h1><p>Generate editable draft letters for review and printing.</p></div></div>
+      <article class="panel"><div class="panel-heading"><div><h2>Create letter draft</h2><p>Always review company details and wording before issuing.</p></div></div><form id="letterForm"><div class="form-grid"><label>Letter type<select id="letterType"><option>Employment offer</option><option>Employment confirmation</option><option>Experience certificate</option><option>Salary certificate</option><option>Show-cause notice</option></select></label><label>Employee *<select id="letterEmployee" required></select></label><label>Company name<input id="companyName" placeholder="Your company name"></label><label>Issue date<input id="letterDate" type="date" required></label><label>Additional details<input id="letterDetails" placeholder="Optional details / reference"></label></div><div class="form-actions"><button class="btn btn-primary">Generate draft</button><button class="btn btn-secondary" type="button" id="printLetter" disabled>Print / Save PDF</button></div></form><div id="letterPreview" class="letter-preview" hidden></div></article>
+    </section>
+
+    <section class="page" id="page-reports">
+      <div class="page-heading"><div><div class="eyebrow">DATA & INSIGHTS</div><h1>Reports & backup</h1><p>Export records and protect your local workspace data.</p></div></div>
+      <div class="callout warning">Data is stored in this browser profile. Clearing browser data, using another browser, or switching computers may make records unavailable. Download backups regularly.</div>
+      <article class="panel"><div class="panel-heading"><div><h2>Export reports</h2><p>Download CSV files that can be opened in Excel.</p></div></div><div class="export-grid"><button class="export-card" id="repEmployees"><b>♙ Employee directory</b><small>Employee details and status</small><span>Download CSV ↓</span></button><button class="export-card" id="repAttendance"><b>◷ Attendance register</b><small>Daily attendance records</small><span>Download CSV ↓</span></button><button class="export-card" id="repLeaves"><b>▣ Leave requests</b><small>Leave dates and decisions</small><span>Download CSV ↓</span></button><button class="export-card" id="repPayroll"><b>＄ Payroll register</b><small>Salary calculations</small><span>Download CSV ↓</span></button><button class="export-card" id="repCandidates"><b>◎ Recruitment pipeline</b><small>Candidate stages and interviews</small><span>Download CSV ↓</span></button></div></article>
+      <article class="panel"><div class="panel-heading"><div><h2>Full backup & restore</h2><p>Back up all SmartHR modules in a JSON file.</p></div></div><div class="actions"><button class="btn btn-primary" id="backupFull">Download full backup</button><label class="btn btn-secondary file-button">Choose backup JSON<input type="file" id="restoreFile" accept=".json,application/json" hidden></label><button class="btn btn-danger" id="restoreBackup">Restore backup</button></div><p class="helper" id="restoreName">No backup file selected.</p></article>
+      <article class="panel"><div class="panel-heading"><div><h2>Workspace summary</h2></div></div><div id="reportSummary" class="summary-grid"></div></article>
+    </section>
+
+    <section class="page" id="page-settings">
+      <div class="page-heading"><div><div class="eyebrow">WORKSPACE</div><h1>Settings & help</h1><p>Understand this local-first prototype and manage its data safely.</p></div></div>
+      <article class="panel"><h2>About SmartHR Pro</h2><p class="body-copy">SmartHR Pro is a local browser-based HR workflow tool. It does not send records to a server. Use the Reports & backup page to export your records and save a backup outside your browser.</p><div class="settings-list"><div><b>Storage</b><span>Browser localStorage</span></div><div><b>Network required</b><span>No, after the files are saved locally</span></div><div><b>Login / permissions</b><span>Not included — do not use for confidential production data</span></div><div><b>Old version migration</b><span>Reads existing smarthr_* keys when present</span></div></div></article>
+      <article class="panel"><h2>Roman Urdu quick guide</h2><ol class="guide"><li><b>Employees:</b> pehle staff ka profile add karein.</li><li><b>Attendance:</b> employee, date aur status select karke save karein.</li><li><b>Leaves:</b> request submit karein, phir Approve ya Reject karein.</li><li><b>Payroll:</b> month, basic salary, allowances aur deductions enter karein.</li><li><b>Recruitment:</b> applicants aur interview stage track karein.</li><li><b>Onboarding:</b> new joiner ke checklist tasks tick karein.</li><li><b>Backup:</b> regularly JSON backup download karein.</li></ol></article>
+    </section>
+  </main>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>
